@@ -9,6 +9,14 @@ namespace Anchridanex.Utilities.Tests
     [TestClass]
     public class RandomItemTests
     {
+        private enum TestEnum
+        {
+            None,
+            One,
+            Two,
+            Three
+        }
+
         private List<string> DefaultItems()
         {
             return new List<string>() {
@@ -57,6 +65,15 @@ namespace Anchridanex.Utilities.Tests
                 items.Length == originalCount - 1 &&
                 randomString != null &&
                 items.Contains(randomString) == false
+                );
+        }
+
+        [TestMethod]
+        public void TestRandomEnum()
+        {
+            TestEnum test = RngUtil.RandomItemFrom<TestEnum>();
+            Assert.IsTrue(
+                (int)test >= 0 && (int)test <= 3
                 );
         }
 

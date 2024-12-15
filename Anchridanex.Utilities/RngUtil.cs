@@ -52,8 +52,7 @@ namespace Anchridanex.Utilities
             T? result = items.ElementAt(index);
 
             if (removeFromList)
-                ((List<T>)items).RemoveAt(index);
-            
+                items.RemoveAt(index);
 
             return result;
         }
@@ -101,6 +100,13 @@ namespace Anchridanex.Utilities
                 return false;
 
             return true;
+        }
+
+        public static T? RandomItemFrom<T>() where T : Enum
+        {
+            var values = Enum.GetValues(typeof(T));
+            int index = Next(0, values.Length);
+            return (T?)values.GetValue(index);
         }
     }
 }
