@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Anchridanex.Utilities.Coroutines
 {
-    public class YieldForExecutions : IEnumerator
+    public class YieldForExecutions : IYieldCondition
     {
         private int _counter;
         private int _executions;
@@ -18,17 +18,10 @@ namespace Anchridanex.Utilities.Coroutines
             _counter = 0;
         }
 
-        public object Current => throw new NotImplementedException();
-
-        public bool MoveNext()
+        public bool AllowRun()
         {
             _counter++;
             return _counter >= _executions;
-        }
-
-        public void Reset()
-        {
-            _counter = 0;
         }
     }
 }

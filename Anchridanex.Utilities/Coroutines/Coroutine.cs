@@ -9,23 +9,34 @@ namespace Anchridanex.Utilities.Coroutines
 {
     public class Coroutine
     {
-        private Func<IEnumerator>? _coroutine;
-        private IEnumerator? _yieldCondition;
+        private IYieldCondition? _yieldCondition;
+        public IYieldCondition? YieldCondition
+        {
+            get
+            {
+                return _yieldCondition;
+            }
+            set
+            {
+                _yieldCondition = value;
+            }
+        }
+
+        private IEnumerator? _coroutine;
         private bool _isStarted = false;
 
         /// <summary>
         /// Starts the given coroutine
         /// </summary>
         /// <param name="coroutine">Coroutine to run</param>
-        public void Start(Func<IEnumerator> coroutine)
+        public void Start(Func<Coroutine, IEnumerator> coroutine)
         {
             if(coroutine is null)
                 throw new ArgumentNullException(nameof(coroutine));
 
-            _coroutine = coroutine;
-            _yieldCondition = null;
+            _coroutine = coroutine(this);
+            YieldCondition = null;
             _isStarted = true;
-            Execute();
         }
 
         /// <summary>
@@ -34,19 +45,19 @@ namespace Anchridanex.Utilities.Coroutines
         /// </summary>
         public void Execute()
         {
-            if (_isStarted is false || _coroutine is null)
+            if (_coroutine is null)
                 return;
 
-            bool runNext = false;
+            if (YieldCondition is not null)
+            {
+                if (YieldCondition.AllowRun() is false)
+                    return;
 
-            if (_yieldCondition is null)
-                runNext = true;
+                YieldCondition = null;
+            }
 
-            else
-                runNext = _yieldCondition.MoveNext();
-
-            if (runNext)
-                _yieldCondition = _coroutine.Invoke();
+            if (_coroutine.MoveNext() is false)
+                _coroutine = null; // Coroutine completed
         }
 
         /// <summary>
@@ -56,7 +67,7 @@ namespace Anchridanex.Utilities.Coroutines
         {
             _isStarted = false;
             _coroutine = null;
-            _yieldCondition = null;
+            YieldCondition = null;
         }
     }
 }

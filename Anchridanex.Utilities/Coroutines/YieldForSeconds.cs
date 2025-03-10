@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Anchridanex.Utilities.Coroutines
 {
-    public class YieldForSeconds : IEnumerator
+    public class YieldForSeconds : IYieldCondition
     {
         Stopwatch _stopwatch;
         float _seconds;
@@ -20,17 +20,9 @@ namespace Anchridanex.Utilities.Coroutines
             _stopwatch.Start();
         }
 
-        public object Current => throw new NotImplementedException();
-
-        public bool MoveNext()
+        public bool AllowRun()
         {
             return (_stopwatch.ElapsedMilliseconds >= _seconds * 1000);
-        }
-
-        public void Reset()
-        {
-            _stopwatch.Reset();
-            _stopwatch.Start();
         }
     }
 }

@@ -36,10 +36,11 @@ namespace Anchridanex.Utilities.Tests
             Assert.IsTrue(_yieldForSecondsComplete is true && sw.ElapsedMilliseconds < ((SECONDS + 0.2) * 1000));
         }
 
-        private IEnumerator YieldForSecondsTest()
+        private IEnumerator YieldForSecondsTest(Coroutine c)
         {
             Debug.WriteLine("Started");
-            yield return new YieldForSeconds(SECONDS);
+            c.YieldCondition = new YieldForSeconds(SECONDS);
+            yield return null;
             _yieldForSecondsComplete = true;
         }
 
@@ -49,7 +50,8 @@ namespace Anchridanex.Utilities.Tests
             Coroutine co = new();
             co.Start(YieldForExecutionsTest);
 
-            int execs = 0;
+            int execs = -1; // First execute is to perform the action
+                            // we only want to measure those after the first execute
 
             while (execs < 10 && _yieldForExecutionsComplete is false)
             {
@@ -60,10 +62,11 @@ namespace Anchridanex.Utilities.Tests
             Assert.IsTrue(execs == EXECUTIONS && _yieldForExecutionsComplete is true);
         }
 
-        private IEnumerator YieldForExecutionsTest()
+        private IEnumerator YieldForExecutionsTest(Coroutine c)
         {
             Debug.WriteLine("Started");
-            yield return new YieldForExecutions(EXECUTIONS);
+            c.YieldCondition = new YieldForExecutions(EXECUTIONS);
+            yield return null;
             _yieldForExecutionsComplete = true;
         }
     }
