@@ -10,20 +10,20 @@ namespace Anchridanex.Utilities.Coroutines
     public class Coroutine
     {
         private IYieldCondition? _yieldCondition;
-        public IYieldCondition? YieldCondition
-        {
-            get
-            {
-                return _yieldCondition;
-            }
-            set
-            {
-                _yieldCondition = value;
-            }
-        }
-
         private IEnumerator? _coroutine;
         private bool _isStarted = false;
+
+        /// <summary>
+        /// Creates a new Coroutine object with the provided coroutine to manage
+        /// </summary>
+        /// <param name="coroutine">Coroutine to run</param>
+        /// <returns>Coroutine object</returns>
+        public static Coroutine CreateAndStart(Func<Coroutine, IEnumerator> coroutine)
+        {
+            Coroutine newCoroutine = new();
+            newCoroutine.Start(coroutine);
+            return newCoroutine;
+        }
 
         /// <summary>
         /// Starts the given coroutine
@@ -35,7 +35,7 @@ namespace Anchridanex.Utilities.Coroutines
                 throw new ArgumentNullException(nameof(coroutine));
 
             _coroutine = coroutine(this);
-            YieldCondition = null;
+            _yieldCondition = null;
             _isStarted = true;
         }
 
@@ -48,12 +48,12 @@ namespace Anchridanex.Utilities.Coroutines
             if (_coroutine is null)
                 return;
 
-            if (YieldCondition is not null)
+            if (_yieldCondition is not null)
             {
-                if (YieldCondition.AllowRun() is false)
+                if (_yieldCondition.AllowRun() is false)
                     return;
 
-                YieldCondition = null;
+                _yieldCondition = null;
             }
 
             if (_coroutine.MoveNext() is false)
@@ -67,7 +67,18 @@ namespace Anchridanex.Utilities.Coroutines
         {
             _isStarted = false;
             _coroutine = null;
-            YieldCondition = null;
+            _yieldCondition = null;
+        }
+
+        /// <summary>
+        /// Sets the yield conditon
+        /// </summary>
+        /// <param name="condition">A new IYieldCondition object</param>
+        /// <returns>null, to be provided via yield return</returns>
+        public object? SetYield(IYieldCondition condition)
+        {
+            _yieldCondition = condition;
+            return null;
         }
     }
 }

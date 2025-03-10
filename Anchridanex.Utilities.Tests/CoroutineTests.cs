@@ -21,10 +21,9 @@ namespace Anchridanex.Utilities.Tests
         [TestMethod]
         public void TestYieldForSeconds()
         {
-            Coroutine co = new();
+            Coroutine co = Coroutine.CreateAndStart(YieldForSecondsTest);
             Stopwatch sw = new();
             sw.Start();
-            co.Start(YieldForSecondsTest);
 
             while (sw.ElapsedMilliseconds < SECONDS * 2000 && _yieldForSecondsComplete is false)
             {
@@ -39,16 +38,14 @@ namespace Anchridanex.Utilities.Tests
         private IEnumerator YieldForSecondsTest(Coroutine c)
         {
             Debug.WriteLine("Started");
-            c.YieldCondition = new YieldForSeconds(SECONDS);
-            yield return null;
+            yield return c.SetYield(new YieldForSeconds(SECONDS));
             _yieldForSecondsComplete = true;
         }
 
         [TestMethod]
         public void TestYieldForExecutions()
         {
-            Coroutine co = new();
-            co.Start(YieldForExecutionsTest);
+            Coroutine co = Coroutine.CreateAndStart(YieldForExecutionsTest);
 
             int execs = -1; // First execute is to perform the action
                             // we only want to measure those after the first execute
@@ -65,8 +62,7 @@ namespace Anchridanex.Utilities.Tests
         private IEnumerator YieldForExecutionsTest(Coroutine c)
         {
             Debug.WriteLine("Started");
-            c.YieldCondition = new YieldForExecutions(EXECUTIONS);
-            yield return null;
+            yield return c.SetYield(new YieldForExecutions(EXECUTIONS));
             _yieldForExecutionsComplete = true;
         }
     }
