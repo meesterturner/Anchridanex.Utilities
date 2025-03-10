@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Anchridanex.Utilities.Coroutines
 {
-    public abstract class YieldCondition
+    public abstract class YieldConditionBase
     {
-        public YieldCondition(Coroutine coroutine)
+        public YieldConditionBase(Coroutine coroutine)
         {
             coroutine.SetYield(this);
         }

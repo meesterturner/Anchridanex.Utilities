@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Anchridanex.Utilities.Coroutines
 {
-    public class YieldForSeconds : YieldCondition
+    public class WaitForSeconds : YieldConditionBase
     {
         Stopwatch _stopwatch;
         float _seconds;
 
-        public YieldForSeconds(float seconds, Coroutine coroutine) : base(coroutine)
+        public WaitForSeconds(float seconds, Coroutine coroutine) : base(coroutine)
         {
             _seconds = seconds;
             _stopwatch = new();

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Anchridanex.Utilities.Coroutines
 {
-    public class YieldForExecutions : YieldCondition
+    public class WaitForExecutions : YieldConditionBase
     {
         private int _counter;
         private int _executions;
 
-        public YieldForExecutions(int executions, Coroutine coroutine) : base(coroutine)
+        public WaitForExecutions(int executions, Coroutine coroutine) : base(coroutine)
         {
             _executions = executions;
             _counter = 0;
