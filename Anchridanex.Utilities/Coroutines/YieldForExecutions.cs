@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace Anchridanex.Utilities.Coroutines
 {
-    public class YieldForExecutions : IYieldCondition
+    public class YieldForExecutions : YieldCondition
     {
         private int _counter;
         private int _executions;
 
-        public YieldForExecutions(int executions)
+        public YieldForExecutions(int executions, Coroutine coroutine) : base(coroutine)
         {
             _executions = executions;
             _counter = 0;
         }
 
-        public bool AllowRun()
+        public override bool AllowRun()
         {
             _counter++;
             return _counter >= _executions;

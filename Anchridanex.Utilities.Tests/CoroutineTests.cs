@@ -38,7 +38,7 @@ namespace Anchridanex.Utilities.Tests
         private IEnumerator YieldForSecondsTest(Coroutine c)
         {
             Debug.WriteLine("Started");
-            yield return c.SetYield(new YieldForSeconds(SECONDS));
+            yield return new YieldForSeconds(SECONDS, c);
             _yieldForSecondsComplete = true;
         }
 
@@ -62,7 +62,7 @@ namespace Anchridanex.Utilities.Tests
         private IEnumerator YieldForExecutionsTest(Coroutine c)
         {
             Debug.WriteLine("Started");
-            yield return c.SetYield(new YieldForExecutions(EXECUTIONS));
+            yield return new YieldForExecutions(EXECUTIONS, c);
             _yieldForExecutionsComplete = true;
         }
     }

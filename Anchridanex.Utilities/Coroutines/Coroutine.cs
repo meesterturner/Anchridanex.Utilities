@@ -9,7 +9,7 @@ namespace Anchridanex.Utilities.Coroutines
 {
     public class Coroutine
     {
-        private IYieldCondition? _yieldCondition;
+        private YieldCondition? _yieldCondition;
         private IEnumerator? _coroutine;
         private bool _isStarted = false;
 
@@ -73,12 +73,10 @@ namespace Anchridanex.Utilities.Coroutines
         /// <summary>
         /// Sets the yield conditon
         /// </summary>
-        /// <param name="condition">A new IYieldCondition object</param>
-        /// <returns>null, to be provided via yield return</returns>
-        public object? SetYield(IYieldCondition condition)
+        /// <param name="condition">A new IYieldCondition object</param>>
+        public void SetYield(YieldCondition condition)
         {
             _yieldCondition = condition;
-            return null;
         }
     }
 }
