@@ -15,13 +15,16 @@ namespace Anchridanex.Utilities.Tests
         const float SECONDS = 4.5f;
         const int EXECUTIONS = 3;
 
+        DateTime waitUntilTime;
+
         bool _yieldForSecondsComplete = false;
         bool _yieldForExecutionsComplete = false;
+        bool _yieldForTimeComplete = false;
 
         [TestMethod]
-        public void TestYieldForSeconds()
+        public void TestWaitForSeconds()
         {
-            Coroutine co = Coroutine.CreateAndStart(YieldForSecondsTest);
+            Coroutine co = Coroutine.CreateAndStart(WaitForSecondsTest);
             Stopwatch sw = new();
             sw.Start();
 
@@ -35,7 +38,7 @@ namespace Anchridanex.Utilities.Tests
             Assert.IsTrue(_yieldForSecondsComplete is true && sw.ElapsedMilliseconds < ((SECONDS + 0.2) * 1000));
         }
 
-        private IEnumerator YieldForSecondsTest(Coroutine c)
+        private IEnumerator WaitForSecondsTest(Coroutine c)
         {
             Debug.WriteLine("Started");
             yield return new WaitForSeconds(SECONDS, c);
@@ -43,9 +46,9 @@ namespace Anchridanex.Utilities.Tests
         }
 
         [TestMethod]
-        public void TestYieldForExecutions()
+        public void TestWaitForExecutions()
         {
-            Coroutine co = Coroutine.CreateAndStart(YieldForExecutionsTest);
+            Coroutine co = Coroutine.CreateAndStart(WaitForExecutionsTest);
 
             int execs = -1; // First execute is to perform the action
                             // we only want to measure those after the first execute
@@ -59,11 +62,35 @@ namespace Anchridanex.Utilities.Tests
             Assert.IsTrue(execs == EXECUTIONS && _yieldForExecutionsComplete is true);
         }
 
-        private IEnumerator YieldForExecutionsTest(Coroutine c)
+        private IEnumerator WaitForExecutionsTest(Coroutine c)
         {
             Debug.WriteLine("Started");
             yield return new WaitForExecutions(EXECUTIONS, c);
             _yieldForExecutionsComplete = true;
+        }
+
+        [TestMethod]
+        public void TestWaitForTime()
+        {
+
+            waitUntilTime = DateTime.Now.AddSeconds(3);
+            DateTime maximumWaitTime = DateTime.Now.AddSeconds(10);
+
+            Coroutine co = Coroutine.CreateAndStart(WaitUntilTimeTest);
+
+            while (DateTime.Now < maximumWaitTime && _yieldForTimeComplete is false)
+            {
+                co.Execute();
+            }
+
+            Assert.IsTrue(DateTime.Now >= waitUntilTime && DateTime.Now <= waitUntilTime.AddMilliseconds(250) && _yieldForTimeComplete is true);
+        }
+
+        private IEnumerator WaitUntilTimeTest(Coroutine c)
+        {
+            Debug.WriteLine("Started WaitForTimeTest()");
+            yield return new WaitUntilTime(waitUntilTime, c);
+            _yieldForTimeComplete = true;
         }
     }
 }
