@@ -15,8 +15,19 @@ namespace Anchridanex.Utilities.Maps
 
         private Dictionary<MapVector2, T> cells = new();
 
+        private void CheckPosition(MapVector2 position)
+        {
+            if (position.X < 1 || position.X > Width)
+                throw new ArgumentException($"X position must be between 1 and Width ({Width})");
+
+            if (position.Y < 1 || position.Y > Height)
+                throw new ArgumentException($"Y position must be between 1 and Height ({Height})");
+        }
+
         public void AddCell(T c)
         {
+            CheckPosition(c.Position);
+
             if (cells.ContainsKey(c.Position))
                 cells[c.Position] = c;
             else
@@ -25,8 +36,7 @@ namespace Anchridanex.Utilities.Maps
 
         public T? GetCell(MapVector2 position)
         {
-            if (position.X < 1 || position.X > Width || position.Y < 1 || position.Y > Height)
-                throw new ArgumentException("Requested cell outside of width or height boundary");
+            CheckPosition(position);
 
             if (cells.ContainsKey(position))
                 return cells[position];
@@ -55,8 +65,7 @@ namespace Anchridanex.Utilities.Maps
 
         public List<MapVector2> GetAdjacentCoordinates(MapVector2 position)
         {
-            if (position.X < 1 || position.X > Width || position.Y < 1 || position.Y > Height)
-                throw new ArgumentException("Requested cell outside of width or height boundary");
+            CheckPosition(position);
 
             List<MapVector2> retVal = new();
             List<MapAdjacentDirection> dirs = GetAdjacentDirections();
