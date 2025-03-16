@@ -14,6 +14,12 @@ namespace Anchridanex.Utilities.Maps
             this.Y = y;
         }
 
+        public MapVector2(float x, float y)
+        {
+            this.X = (int)x;
+            this.Y = (int)y;
+        }
+
         public override string ToString()
         {
             return X.ToString() + "," + Y.ToString();
