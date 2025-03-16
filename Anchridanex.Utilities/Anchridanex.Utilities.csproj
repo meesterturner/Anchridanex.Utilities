@@ -4,6 +4,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Title>Anchridanex Utilities</Title>
+    <Authors>Paul Turner</Authors>
+    <Company>Anchridanex Developments</Company>
+    <Description>A collection of helper utility classes</Description>
   </PropertyGroup>
 
 </Project>
