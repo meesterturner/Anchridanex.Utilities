@@ -13,5 +13,10 @@ namespace Anchridanex.Utilities.Maps
             this.X = x;
             this.Y = y;
         }
+
+        public override string ToString()
+        {
+            return X.ToString() + "," + Y.ToString();
+        }
     }
 }
