@@ -54,11 +54,49 @@ Map consisting of traditional four-sided (square or rectangle) cells.
 
 ## Other Classes ##
 ### LruCache ###
+Provides a simple Last Recently Used style cache for function input and output. Default capacity is 100 entries, but this can be changed in the constructor.
+
+```csharp
+// TKey could be considered to be the input for the function being cached
+// TValue is the output of the function
+LruCache<TKey, TValue> cache = new();
+```
+
+#### Example Usage ####
+```csharp
+public int Test()
+{
+    // Cache all the answers for the formula where the starting
+    // values are 1 to 100 inclusive
+    LruCache<int, int> cache = new();
+    for (int i = 1; i <= 100; i++)
+    {
+        cache[i] = Answer(i);
+    }
+
+    // Return the cached result for the 79th iteration (result is 158)
+    return cache[79];  
+}
+
+private int Answer(int i)
+{
+    return i + 79;
+}
+```
+
+#### Public Methods ####
+```get[TKey key]``` - Returns the value for the specified key. If the value does not exist in the cache, the default for the type is returned. In many cases, ```TryGetValue()``` may be more appropriate to use.
+
+```set[TKey key, TValue value]``` - Add the given key/value pair to the cache. The oldest cached value will be pushed out if adding this value exceeds the capacity. Same as calling ```Add()```.
+
+```void Add(TKey key, TValue? value)``` - Add the given key/value pair to the cache. The oldest cached value will be pushed out if adding this value exceeds the capacity.
+
+```bool TryGetValue(TKey key, out TValue? value)``` - Attempt to retrieve the value for the given key. Value is returned via the output parameter ```value```. Function returns true if the value is contained in the cache, otherwise false.
 
 ### Pairing ###
 Creates a pair of objects to be able to be easily compared. As this class is generic, objects must be of same type. The following code sets out an example which will be used for demonstrating method usage:
 
-```
+```csharp
 Car car1 = new Car("Seat", "Ibiza");
 Car car2 = new Car("Peugeot", "2008");
 Car car3 = new Car("BMW", "3-Series");
@@ -76,7 +114,7 @@ carPair.Second = car2;
 #### Public Methods ####
 ```bool MatchesInExactOrder(T? one, T? two)``` - Checks to see if the two objects specified are both instances in the pair. ```one``` must match the first item, ```two``` must match the second item.
 
-```
+```csharp
 bool match;
 match = MatchesInExactOrder(car1, car2); // Returns true
 match = MatchesInExactOrder(car2, car1); // Returns false (wrong order)
@@ -85,23 +123,23 @@ match = MatchesInExactOrder(car1, car3); // Returns false (second item not in pa
 
 ```bool MatchesInEitherOrder(T? one, T? two)``` - Checks to see if the two objects specified are both instances in the pair. It does not matter which order they are specified in the pairing or in the parameters, as long as both objects are present in the pair.
 
-```
+```csharp
 bool match;
 match = MatchesInEitherOrder(car1, car2); // Returns true
 match = MatchesInEitherOrder(car2, car1); // Returns true
 match = MatchesInEitherOrder(car1, car3); // Returns false (second item not in pair)
 ```
 
-```bool Contains(T? either)``` - Checks to see if the object specified in the parameter "either" matches at least one of the first or second item in the pair.
-```
+```bool Contains(T? either)``` - Checks to see if the object specified in the parameter ```either``` matches at least one of the first or second item in the pair.
+```csharp
 bool match;
 match = Contains(car1); // Returns true
 match = Contains(car2); // Returns true
 match = Contains(car3); // Returns false
 ```
 
-```bool DoesNotContain(T? neither)``` - Checks to see if the object specified in "neither" does not exist in the pair.
-```
+```bool DoesNotContain(T? neither)``` - Checks to see if the object specified in ```neither``` does not exist in the pair.
+```csharp
 bool match;
 match = DoesNotContain(car1); // Returns false
 match = DoesNotContain(car2); // Returns false
@@ -114,13 +152,13 @@ Some miscellaneous randomisation functions, using a static ```Random``` class.
 #### Public Methods ####
 ```static void SetSeed(int seed)``` - Re-instances the static random class with a new seed.
 
-```static int Next(int minValue, int maxValueExclusive)``` - Returns the next randomised integer that is >= minValue, and < maxValueExclusive.
+```static int Next(int minValue, int maxValueExclusive)``` - Returns the next randomised integer that is >= ```minValue```, and < ```maxValueExclusive```.
 
-```NextInclusive(int minValue, int maxValueInclusive)``` - Returns the next randomised integer that is >= minValue, and <= maxValueInclusive.
+```static int NextInclusive(int minValue, int maxValueInclusive)``` - Returns the next randomised integer that is >= ```minValue```, and <= ```maxValueInclusive```.
 
-```static T? RandomItemFrom<T>(List<T> items)``` - Returns a random item from the given list.
+```static T? RandomItemFrom<T>(List<T> items)``` - Returns a random item from the given list. Returns null if ```items``` is null or contains zero items.
 
-```static T? RandomItemFrom<T>(List<T> items, bool removeFromList)``` - Returns a random item from the given list, and also removes the item from the list if removeFromList is true.
+```static T? RandomItemFrom<T>(List<T> items, bool removeFromList)``` - Returns a random item from the given list, and also removes the item from the list if removeFromList is true. Returns null if ```items``` is null or contains zero items.
 
 ```static T? RandomItemFrom<T>(List<T> items, bool removeFromList, out int index)``` - As above, but also outputs the original index of the item from the list (which is before removal, if removeFromList is true). index returns -1 if the list is null or contains zero items.
 
@@ -130,11 +168,11 @@ Some miscellaneous randomisation functions, using a static ```Random``` class.
 Helper class to remove boilerplate code for classes intended to be used as singletons.
 
 #### Example Usage ####
-```
+```csharp
 public class MySingleton : Singleton<MySingleton>
 {
     public int Value { get; set; }
-    public string Name {get; set; }
+    public string Name { get; set; }
 }
 
 public class Test
