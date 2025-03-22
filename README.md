@@ -2,8 +2,111 @@
 A collection of semi-useful classes I've written primarily for my own use and entertainment.
 
 ## Coroutines ##
+This is a system designed to replicate functionality similar to coroutines in Unity. The setup and operation is slightly different in practice to Unity, but this is to enable it to work with standard C#.
+
+### Example ###
+```csharp
+public class Demo
+{
+    Coroutine co;
+
+    private void StartCoroutine()
+    {
+        co = Coroutine.CreateAndStart(CoroutineFunction)
+    }
+
+    private void Update() // In context, this would be similar to Unity's Update method
+    {
+        co?.Execute(); // This will only execute the coroutine if the wait condition is met
+    }
+
+    private IEnumerator CoroutineFunction(Coroutine c)
+    {
+        Debug.WriteLine("Started");
+
+        for (int i = 1; i <= 10; i++)
+        {
+            Debug.WriteLine(i);
+            yield return new WaitForSeconds(1, c);
+        }
+    }
+}
+```
+
+### Coroutine Class Public Methods ###
+```static void CreateAndStart(Func<Coroutine, IEnumerator> coroutine)``` - Creates a new instance of the ```Coroutine``` class, and starts the specified coroutine function. The function must return ```IEnumerator``` and have a ```Coroutine``` parameter.
+
+```void Start(Func<Coroutine, IEnumerator> coroutine)``` - Starts the specified coroutine function. The function must return ```IEnumerator``` and have a ```Coroutine``` parameter.
+
+```void Execute()``` - Attempts to execute the previously specified coroutine function, provided that the yield condition has been met and has not been stopped.
+
+```void Stop()``` - Stops execution of the current coroutine.
+
+### Yield Conditions ###
+All the conditions for yielding derive from ```YieldConditionBase```. The included conditions are:
+
+```WaitForExecutions(int executions, Coroutine coroutine)``` - Waits for the ```Execute()``` method to be called the specified number of times before releasing.
+
+```WaitForSeconds(float seconds, Coroutine coroutine)``` - Waits for the specified amount of seconds before releasing.
+
+```WaitUntilTime(DateTime time, Coroutine coroutine)``` - Waits until the specified date and time has been met before releasing. Parameter ```time``` must be in the future.
 
 ## Logging ##
+This is a simple logging framework to enable logging capabilities to other systems. The actual logging implementation needs to be a class derived from ```LoggerBase```. 
+
+### Example ###
+```csharp
+// Example utilising the Godot Engine
+public class GodotLog : LoggerBase
+{
+    public override void WriteToLogWorker(LogSeverity sev, string message)
+    {
+        if (sev == LogSeverity.Error)
+            GD.PrintErr(message);
+        else
+            GD.Print(message);
+    }
+}
+
+public class Game
+{
+    public void Start()
+    {
+        LogEngine.Logger = new GodotLog();
+        LogEngine.Logger.Severities = LogEngine.Logger.AllSeverities;
+        LogEngine.LogInformation("Godot Log Started");
+        LogEngine.LogError("We have found an error!");
+    }
+}
+```
+
+### LogEngine ###
+```static LogSeverity DefaultSeverity { get; set; }``` - Specifies the default severity when one is not specified. Default is ```Debug```.
+
+
+
+```static void Log(LogSeverity sev, string message)``` - Adds a log entry of the given severity, with the provided message. This is also called via the following methods:
+
+* ```static void LogInformation(string message)```
+* ```static void LogWarning(string message)```
+* ```static void LogError(string message)```
+* ```static void LogDebug(string message)```
+* ```static void Log(string message)```
+
+Note that the overload for ```Log(string message)``` will add a log entry using the default severity.
+
+```static void LogFunctionCall()``` - This would be useful in logging the exact method or function name generating the log event.
+
+### LoggerBase ###
+```List<LogSeverity> Severities { get; set; }``` - Specifies the levels you wish to log. The default in the base class is a blank list, therefore no events would be logged. This can be overridden in the derived class.
+
+```bool WriteToDisk { get; set; }``` - If ```true```, will also write the log event to disk if desired. Default is ```false```. Additionally, the log folder must be set in the constructor. The log files's name inside the folder will contain the date and time the instance of the logging class was started, for example ```Log_2025-03-01_120102.txt```.
+
+```List<LogSeverity> AllSeverities { get; }``` - Returns a list of all possible severity levels.
+
+```List<LogSeverity> NoSeverities { get; }``` - Returns an empty list of severities. To be used for convenience with the ```Severities``` property.
+
+```void WriteToLog(LogSeverity sev, string message)``` - Writes the event to the log. This is not inteded to be used directly, but can be. Should be used through the static functions provided in ```LogEngine```.
 
 ## Maps ##
 This is a collection of classes designed to be able to track two-dimensional grid maps, for both traditional grids using rectangular cells, and hexagonal grids.
@@ -27,7 +130,7 @@ Contains X and Y coordinates for cells. This has been implemented so as to stand
 The abstract base class for all maps. When referring to grid positions, the top-left corner is position 1, 1. Size of map is to be specified in the constructor, for example:
 
 ```MapConcreteClass map = new MapConcreteClass(15, 20);```
-would produce a map of type MapConcreteClass, of size 15 cells wide and 20 cells high.
+would produce a map of type MapConcreteClass, of size 15 cells wide and 20 cells high. (This assumes that MapConcreteClass is derived from MapBase)
 
 #### Public Properties ####
 ```int Width { get; init; }``` - Width of grid as number of cells
