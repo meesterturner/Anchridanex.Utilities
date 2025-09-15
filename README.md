@@ -59,7 +59,7 @@ This is a simple logging framework to enable logging capabilities to other syste
 // Example utilising the Godot Engine
 public class GodotLog : LoggerBase
 {
-    public override void WriteToLogWorker(LogSeverity sev, string message)
+    protected override void WriteToLogWorker(LogSeverity sev, string message)
     {
         if (sev == LogSeverity.Error)
             GD.PrintErr(message);
