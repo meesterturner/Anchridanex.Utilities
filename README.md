@@ -250,22 +250,22 @@ match = DoesNotContain(car3); // Returns true
 ```
 
 ### RngUtil ###
-Some miscellaneous randomisation functions, using a static ```Random``` class.
+Some miscellaneous randomisation functions. Prior to v1.2.0, all methods in RngUtil were static. This has now been changed to use all instance methods.
 
 #### Public Methods ####
-```static void SetSeed(int seed)``` - Re-instances the static random class with a new seed.
+```void SetSeed(int seed)``` - Re-instances the random class with a new seed.
 
-```static int Next(int minValue, int maxValueExclusive)``` - Returns the next randomised integer that is >= ```minValue```, and < ```maxValueExclusive```.
+```int Next(int minValue, int maxValueExclusive)``` - Returns the next randomised integer that is >= ```minValue```, and < ```maxValueExclusive```.
 
-```static int NextInclusive(int minValue, int maxValueInclusive)``` - Returns the next randomised integer that is >= ```minValue```, and <= ```maxValueInclusive```.
+```int NextInclusive(int minValue, int maxValueInclusive)``` - Returns the next randomised integer that is >= ```minValue```, and <= ```maxValueInclusive```.
 
-```static T? RandomItemFrom<T>(List<T> items)``` - Returns a random item from the given list. Returns null if ```items``` is null or contains zero items.
+```T? RandomItemFrom<T>(List<T> items)``` - Returns a random item from the given list. Returns null if ```items``` is null or contains zero items.
 
-```static T? RandomItemFrom<T>(List<T> items, bool removeFromList)``` - Returns a random item from the given list, and also removes the item from the list if removeFromList is true. Returns null if ```items``` is null or contains zero items.
+```T? RandomItemFrom<T>(List<T> items, bool removeFromList)``` - Returns a random item from the given list, and also removes the item from the list if removeFromList is true. Returns null if ```items``` is null or contains zero items.
 
-```static T? RandomItemFrom<T>(List<T> items, bool removeFromList, out int index)``` - As above, but also outputs the original index of the item from the list (which is before removal, if removeFromList is true). index returns -1 if the list is null or contains zero items.
+```T? RandomItemFrom<T>(List<T> items, bool removeFromList, out int index)``` - As above, but also outputs the original index of the item from the list (which is before removal, if removeFromList is true). index returns -1 if the list is null or contains zero items.
 
-```static T? RandomItemFrom<T>() where T : Enum``` - Returns a random enum from the specified enum type.
+```T? RandomItemFrom<T>() where T : Enum``` - Returns a random enum from the specified enum type.
 
 ### Singleton ###
 Helper class to remove boilerplate code for classes intended to be used as singletons.

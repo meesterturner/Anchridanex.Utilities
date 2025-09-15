@@ -8,6 +8,8 @@
     <Authors>Paul Turner</Authors>
     <Company>Anchridanex Developments</Company>
     <Description>A collection of helper utility classes</Description>
+    <FileVersion>1.2.0.0</FileVersion>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
 </Project>

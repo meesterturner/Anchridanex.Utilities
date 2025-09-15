@@ -25,12 +25,21 @@ namespace Anchridanex.Utilities.Tests
         }
 
         [TestMethod]
+        public void TestClassInstance()
+        {
+            RngUtil rng = new();
+            int num = rng.NextInclusive(1, 10);
+            Assert.IsTrue(num >= 1 && num <= 10);
+        }
+
+        [TestMethod]
         public void TestRandomItemFromList()
         {
+            RngUtil rng = new();
             int randomIndex;
 
             List<string> items = DefaultItems();
-            string? randomString = RngUtil.RandomItemFrom(items, false, out randomIndex);
+            string? randomString = rng.RandomItemFrom(items, false, out randomIndex);
 
             Assert.IsTrue(
                 randomString != null &&
@@ -43,9 +52,10 @@ namespace Anchridanex.Utilities.Tests
         [TestMethod]
         public void TestAndRemoveRandomItemFromList()
         {
+            RngUtil rng = new();
             List<string> items = DefaultItems();
             int originalCount = items.Count;
-            string? randomString = RngUtil.RandomItemFrom(items, true);
+            string? randomString = rng.RandomItemFrom(items, true);
 
             Assert.IsTrue(
                 items.Count == originalCount - 1 &&
@@ -57,10 +67,11 @@ namespace Anchridanex.Utilities.Tests
         [TestMethod]
         public void TestAndRemoveRandomItemFromArray()
         {
+            RngUtil rng = new();
             string[] items = DefaultItems().ToArray();
             int originalCount = items.Length;
-            string? randomString = RngUtil.RandomItemFrom(ref items, true, out _);
-
+            string? randomString = rng.RandomItemFrom(ref items, true, out _);
+            
             Assert.IsTrue(
                 items.Length == originalCount - 1 &&
                 randomString != null &&
@@ -71,7 +82,8 @@ namespace Anchridanex.Utilities.Tests
         [TestMethod]
         public void TestRandomEnum()
         {
-            TestEnum test = RngUtil.RandomItemFrom<TestEnum>();
+            RngUtil rng = new();
+            TestEnum test = rng.RandomItemFrom<TestEnum>();
             Assert.IsTrue(
                 (int)test >= 0 && (int)test <= 3
                 );

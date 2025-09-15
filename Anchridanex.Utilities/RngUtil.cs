@@ -11,34 +11,34 @@ namespace Anchridanex.Utilities
 {
     public class RngUtil
     {
-        private static Random _rng = new();
+        private Random _rng = new();
 
-        public static void SetSeed(int seed)
+        public void SetSeed(int seed)
         {
             _rng = new(seed);
         }
 
-        public static int Next(int minValue, int maxValueExclusive)
+        public int Next(int minValue, int maxValueExclusive)
         {
             return _rng.Next(minValue, maxValueExclusive);
         }
 
-        public static int NextInclusive(int minValue, int maxValueInclusive)
+        public int NextInclusive(int minValue, int maxValueInclusive)
         {
             return _rng.Next(minValue, maxValueInclusive + 1);
         }
 
-        public static T? RandomItemFrom<T>(List<T> items)
+        public T? RandomItemFrom<T>(List<T> items)
         {
             return RandomItemFrom(items, false, out _);
         }
 
-        public static T? RandomItemFrom<T>(List<T> items, bool removeFromList)
+        public T? RandomItemFrom<T>(List<T> items, bool removeFromList)
         {
             return RandomItemFrom(items, removeFromList, out _);
         }
 
-        public static T? RandomItemFrom<T>(List<T> items, bool removeFromList, out int index)
+        public T? RandomItemFrom<T>(List<T> items, bool removeFromList, out int index)
         {
             if (HasItems(items) == false)
             {
@@ -57,17 +57,17 @@ namespace Anchridanex.Utilities
             return result;
         }
 
-        public static T? RandomItemFrom<T>(ref T[] items)
+        public T? RandomItemFrom<T>(ref T[] items)
         {
             return RandomItemFrom(ref items, false, out _);
         }
 
-        public static T? RandomItemFrom<T>(ref T[] items, bool removeFromList)
+        public T? RandomItemFrom<T>(ref T[] items, bool removeFromList)
         {
             return RandomItemFrom(ref items, removeFromList, out _);
         }
 
-        public static T? RandomItemFrom<T>(ref T[] items, bool removeFromList, out int index)
+        public T? RandomItemFrom<T>(ref T[] items, bool removeFromList, out int index)
         {
             if (HasItems(items) == false)
             {
@@ -91,7 +91,7 @@ namespace Anchridanex.Utilities
             return result;
         }
 
-        private static bool HasItems<T>(IEnumerable<T> items)
+        private bool HasItems<T>(IEnumerable<T> items)
         {
             if (items == null)
                 return false;
@@ -102,7 +102,7 @@ namespace Anchridanex.Utilities
             return true;
         }
 
-        public static T? RandomItemFrom<T>() where T : Enum
+        public T? RandomItemFrom<T>() where T : Enum
         {
             var values = Enum.GetValues(typeof(T));
             int index = Next(0, values.Length);
